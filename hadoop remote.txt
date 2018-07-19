@@ -1,0 +1,89 @@
+HADOOP远程调试步骤 IDEA+HADOOP+Maven
+1、本地hadoop配置
+下载hadoop2.6.0安装包，从集群中下载或从官网中下载解压hadoop-2.6.0.tar.gz
+https://archive.apache.org/dist/hadoop/common/hadoop-2.6.0/
+
+2、下载hadoop.dll及winutil.exe文件
+http://www.pc6.com/softview/SoftView_578664.html
+
+3、将hadoop解压包放置到E盘program files文件夹，
+将包含hadoop.dll及winutil.exe文件夹（2.6.3）替换到bin目录，
+添加环境变量：HADOOP_HOME  E:\Program Files\hadoop-2.6.0
+			  CLASSPATH添加;%HADOOP_HOME%\bin\winutils.exe;
+			  PATH     添加;%HADOOP_HOME%\bin;
+	
+4、IDEA配置
+https://blog.csdn.net/chaoping315/article/details/78904970
+	
+5、配置pom.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.polarxiong</groupId>
+    <artifactId>hadoop</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <id>apache</id>
+            <url>http://maven.apache.org</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-core</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+		
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-hdfs</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+    </dependencies>
+</project>
+
+6、log4j.properties文件
+在main文件夹下（与java文件夹同级）新建resources文件夹，新建log4j.properties文件
+log4j.rootLogger=INFO, stdout
+#log4j.logger.org.springframework=INFO
+#log4j.logger.org.apache.activemq=INFO
+#log4j.logger.org.apache.activemq.spring=WARN
+#log4j.logger.org.apache.activemq.store.journal=INFO
+#log4j.logger.org.activeio.journal=INFO
+
+
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} | %-5.5p | %-16.16t | %-32.32c{1} | %-32.32C %4L | %m%n
+
+7、IDEA运行配置
+	run-edit configuration
+Program arguments：
+	hdfs://10.10.2.129:8020/input   hdfs://10.10.2.129:8020/output10
+注意：input文件夹需自己建立，且文件夹内放置txt等文件，output文件夹不能存在
+
+	
+
+
+
+
+
